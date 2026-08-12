@@ -1,0 +1,62 @@
+- hosts: app
+  become: yes
+  vars:
+    app_dir: /home/ec2-user/app
+
+  tasks:
+    - name: installing python and pip
+      yum:
+        name: [python3-pip, git]
+        state: present
+
+    - name: creating app directory
+      file: path={{ app_dir }} state=directory owner=ec2-user group=ec2-user
+
+    - name: copying app code to server
+      copy: src=../app/ dest={{ app_dir }} owner=ec2-user group=ec2-user
+
+    - name: installing dependencies
+      pip: requirements={{ app_dir }}/requirements.txt executable=pip3
+
+    - name: creating systemd service file for gunicorn
+      copy:
+        dest: /etc/systemd/system/myapp.service
+        content: |
+          [Unit]
+          Description=My Flask App
+          After=network.target
+          [Service]
+          User=ec2-user
+          WorkingDirectory={{ app_dir }}
+          ExecStart=/usr/local/bin/gunicorn --bind 0.0.0.0:5000 --workers 2 --access-logfile {{ app_dir }}/app.log --error-logfile {{ app_dir }}/app.log app:app
+          Restart=always
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: starting the app
+      systemd: name=myapp daemon_reload=yes state=started enabled=yes
+
+    - name: installing CloudWatch Agent
+      yum: name=amazon-cloudwatch-agent state=present
+
+    - name: creating CloudWatch Agent config
+      copy:
+        dest: /opt/aws/amazon-cloudwatch-agent/etc/config.json
+        content: |
+          {
+            "logs": {
+              "logs_collected": {
+                "files": {
+                  "collect_list": [{
+                    "file_path": "/home/ec2-user/app/app.log",
+                    "log_group_name": "proj2-logs",
+                    "log_stream_name": "{instance_id}",
+                    "retention_in_days": 7
+                  }]
+                }
+              }
+            }
+          }
+
+    - name: starting CloudWatch Agent
+      shell: /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/etc/config.json
