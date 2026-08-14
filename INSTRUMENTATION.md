@@ -1,3 +1,4 @@
+
 # Send metric
 cw_client = boto3.client('cloudwatch', region_name='us-east-1')
 

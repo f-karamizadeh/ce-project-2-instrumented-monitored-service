@@ -1,0 +1,412 @@
+{
+  "widgets": [
+    {
+      "type": "text",
+      "x": 0,
+      "y": 0,
+      "width": 24,
+      "height": 1,
+      "properties": {
+        "markdown": "# \ud83c\udf10 Proj2 Health Dashboard (No ALB)\n**Instance:** ${instance_id} | **Auto-refresh:** 60s | Proj2/MyApp + EC2 + CWAgent (High-Res 10s)"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 1,
+      "width": 6,
+      "height": 3,
+      "properties": {
+        "title": "Current Request Rate",
+        "region": "us-east-1",
+        "metrics": [
+          [
+            "Proj2/MyApp",
+            "request_count",
+            {
+              "stat": "Sum",
+              "period": 60
+            }
+          ]
+        ],
+        "view": "singleValue"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 6,
+      "y": 1,
+      "width": 6,
+      "height": 3,
+      "properties": {
+        "title": "Error Rate",
+        "region": "us-east-1",
+        "metrics": [
+          [
+            "Proj2/MyApp",
+            "error_count",
+            {
+              "stat": "Sum",
+              "period": 60
+            }
+          ]
+        ],
+        "view": "singleValue"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12,
+      "y": 1,
+      "width": 6,
+      "height": 3,
+      "properties": {
+        "title": "Avg Latency",
+        "region": "us-east-1",
+        "metrics": [
+          [
+            "Proj2/MyApp",
+            "api_latency",
+            {
+              "stat": "Average",
+              "period": 60
+            }
+          ]
+        ],
+        "view": "singleValue"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 18,
+      "y": 1,
+      "width": 6,
+      "height": 3,
+      "properties": {
+        "title": "Orders per min",
+        "region": "us-east-1",
+        "metrics": [
+          [
+            "Proj2/MyApp",
+            "orders_per_minute",
+            {
+              "stat": "Sum",
+              "period": 60
+            }
+          ]
+        ],
+        "view": "singleValue"
+      }
+    },
+    {
+      "type": "text",
+      "x": 0,
+      "y": 4,
+      "width": 24,
+      "height": 1,
+      "properties": {
+        "markdown": "## \ud83d\udcca Golden Signals (Period 60s)"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 5,
+      "width": 12,
+      "height": 6,
+      "properties": {
+        "title": "Traffic - request_count",
+        "region": "us-east-1",
+        "metrics": [
+          [
+            "Proj2/MyApp",
+            "request_count",
+            {
+              "stat": "Sum",
+              "period": 60,
+              "label": "Requests/min"
+            }
+          ]
+        ],
+        "view": "timeSeries"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12,
+      "y": 5,
+      "width": 12,
+      "height": 6,
+      "properties": {
+        "title": "Errors - error_count",
+        "region": "us-east-1",
+        "metrics": [
+          [
+            "Proj2/MyApp",
+            "error_count",
+            {
+              "stat": "Sum",
+              "period": 60,
+              "color": "#d13212"
+            }
+          ]
+        ],
+        "view": "timeSeries"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 11,
+      "width": 12,
+      "height": 6,
+      "properties": {
+        "title": "Latency - api_latency",
+        "region": "us-east-1",
+        "metrics": [
+          [
+            "Proj2/MyApp",
+            "api_latency",
+            {
+              "stat": "Average",
+              "period": 60,
+              "label": "Avg"
+            }
+          ],
+          [
+            "Proj2/MyApp",
+            "api_latency",
+            {
+              "stat": "Maximum",
+              "period": 60,
+              "label": "Max"
+            }
+          ]
+        ],
+        "view": "timeSeries"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12,
+      "y": 11,
+      "width": 12,
+      "height": 6,
+      "properties": {
+        "title": "Saturation - EC2 CPU + Orders",
+        "region": "us-east-1",
+        "metrics": [
+          [
+            "AWS/EC2",
+            "CPUUtilization",
+            "InstanceId",
+            "${instance_id}",
+            {
+              "stat": "Average",
+              "color": "#2ca02c",
+              "label": "CPU %"
+            }
+          ],
+          [
+            "Proj2/MyApp",
+            "orders_per_minute",
+            {
+              "stat": "Sum",
+              "period": 60,
+              "yAxis": "right",
+              "label": "Orders/min"
+            }
+          ]
+        ],
+        "view": "timeSeries",
+        "period": 60
+      }
+    },
+    {
+      "type": "text",
+      "x": 0,
+      "y": 17,
+      "width": 24,
+      "height": 1,
+      "properties": {
+        "markdown": "## \ud83d\udcbb EC2 Resource Utilization (Fixed for CWAgent High-Res)"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 18,
+      "width": 6,
+      "height": 5,
+      "properties": {
+        "title": "CPU %",
+        "region": "us-east-1",
+        "metrics": [
+          [
+            "AWS/EC2",
+            "CPUUtilization",
+            "InstanceId",
+            "${instance_id}",
+            {
+              "stat": "Average"
+            }
+          ]
+        ],
+        "view": "timeSeries",
+        "period": 60
+      }
+    },
+    {
+      "type": "metric",
+      "x": 6,
+      "y": 18,
+      "width": 6,
+      "height": 5,
+      "properties": {
+        "title": "Memory % (CWAgent)",
+        "region": "us-east-1",
+        "metrics": [
+          [
+            "CWAgent",
+            "mem_used_percent",
+            "InstanceId",
+            "${instance_id}",
+            {
+              "stat": "Average",
+              "period": 10,
+              "label": "mem %"
+            }
+          ]
+        ],
+        "view": "timeSeries",
+        "period": 10
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12,
+      "y": 18,
+      "width": 6,
+      "height": 5,
+      "properties": {
+        "title": "Network",
+        "region": "us-east-1",
+        "metrics": [
+          [
+            "AWS/EC2",
+            "NetworkIn",
+            "InstanceId",
+            "${instance_id}",
+            {
+              "stat": "Sum",
+              "label": "In"
+            }
+          ],
+          [
+            "AWS/EC2",
+            "NetworkOut",
+            "InstanceId",
+            "${instance_id}",
+            {
+              "stat": "Sum",
+              "label": "Out"
+            }
+          ]
+        ],
+        "view": "timeSeries",
+        "period": 60
+      }
+    },
+    {
+      "type": "metric",
+      "x": 18,
+      "y": 18,
+      "width": 6,
+      "height": 5,
+      "properties": {
+        "title": "Disk % (CWAgent) - AutoSearch",
+        "region": "us-east-1",
+        "metrics": [
+          [
+            {
+              "expression": "SEARCH('{CWAgent,InstanceId,device,fstype,path} MetricName=\"disk_used_percent\" AND InstanceId=\"${instance_id}\"', 'Average', 10)",
+              "id": "e1",
+              "label": "Disk / %"
+            }
+          ]
+        ],
+        "view": "timeSeries",
+        "period": 10,
+        "yAxis": {
+          "left": {
+            "min": 0,
+            "max": 100
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "x": 0,
+      "y": 23,
+      "width": 24,
+      "height": 1,
+      "properties": {
+        "markdown": "## \ud83d\udd0d Correlation View"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 24,
+      "width": 24,
+      "height": 6,
+      "properties": {
+        "title": "Latency vs Traffic vs Errors vs CPU",
+        "region": "us-east-1",
+        "metrics": [
+          [
+            "Proj2/MyApp",
+            "api_latency",
+            {
+              "stat": "Average",
+              "period": 60,
+              "label": "Latency"
+            }
+          ],
+          [
+            "Proj2/MyApp",
+            "request_count",
+            {
+              "stat": "Sum",
+              "period": 60,
+              "label": "Req"
+            }
+          ],
+          [
+            "Proj2/MyApp",
+            "error_count",
+            {
+              "stat": "Sum",
+              "period": 60,
+              "label": "Errors",
+              "color": "#d13212"
+            }
+          ],
+          [
+            "AWS/EC2",
+            "CPUUtilization",
+            "InstanceId",
+            "${instance_id}",
+            {
+              "stat": "Average",
+              "period": 60,
+              "label": "CPU %"
+            }
+          ]
+        ],
+        "view": "timeSeries"
+      }
+    }
+  ]
+}
