@@ -28,6 +28,20 @@ fields @timestamp, level, correlation_id, method, path, status_code, latency_ms,
 | filter correlation_id="02621c3a-7a20-46ea-b6e5-1157ae7a516d"
 | sort @timestamp desc
 | limit 20
+
+# High Error Rate
+SOURCE "arn:aws:logs:us-east-1:204146947593:log-group:proj2-logs" START=-604800s END=0s |
+fields @timestamp, correlation_id, path, status_code, level
+| filter status_code >= 500
+| sort @timestamp desc
+| limit 20
+
+# High Latency
+SOURCE "arn:aws:logs:us-east-1:204146947593:log-group:proj2-logs" START=-604800s END=0s |
+fields latency_ms, path, correlation_id
+| filter event="request_completed"
+| stats avg(latency_ms), max(latency_ms), pct(latency_ms, 95) by bin(1m), path
+| sort avg_latency desc
 ```
 ---
 # triger SNS alarm and Email
