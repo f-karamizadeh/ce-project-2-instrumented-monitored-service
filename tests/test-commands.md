@@ -55,5 +55,8 @@ fields latency_ms, path, correlation_id
   echo "sent $i"
   sleep 0.5
 done
-  - for i in {1..100}; do curl -s http://44.201.34.190:5000/orders  & done
-- 
+  - for i in {1..100}; do curl -s http://44.201.34.190:5000/orders & sleep 1; done
+  # correlation view
+  - seq 1 1000 | xargs -P100 -I{} curl -s http://44.201.34.190:5000/orders
+  # dashboard test
+  - for i in {1..100}; do curl -s http://44.201.34.190:5000/orders; sleep 1; done
